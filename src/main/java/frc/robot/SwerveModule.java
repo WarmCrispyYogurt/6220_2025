@@ -5,12 +5,13 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkRelativeEncoder.Type;
+import com.revrobotics.spark.SparkRelativeEncoder;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,8 +27,8 @@ public class SwerveModule {
     private Rotation2d angleOffset;
 
     //private TalonFX mAngleMotor;
-    private CANSparkMax mAngleMotor;
-    private SparkPIDController mAngleController;
+    private SparkMax mAngleMotor;
+    private SparkClosedLoopController mAngleController;
     private RelativeEncoder mNeoAngleEncoder;
     private TalonFX mDriveMotor;
     private CANcoder angleEncoder;
@@ -53,7 +54,7 @@ public class SwerveModule {
         angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCANcoderConfig);
 
         /* Angle Motor Config */
-        mAngleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
+        mAngleMotor = new SparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
         mAngleMotor.setInverted(Constants.SwerveConstants.angleMotorInvert);
         mAngleMotor.setSmartCurrentLimit(Constants.SwerveConstants.angleCurrentThreshold);
         mAngleMotor.setIdleMode(SwerveConstants.angleNeutralMode);
