@@ -5,13 +5,15 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+// // import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkRelativeEncoder.Type;
+// import com.revrobotics.SparkRelativeEncoder.Type;
 import com.revrobotics.spark.SparkRelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,6 +34,8 @@ public class SwerveModule {
     private RelativeEncoder mNeoAngleEncoder;
     private TalonFX mDriveMotor;
     private CANcoder angleEncoder;
+    SparkMaxConfig angleConfig = new SparkMaxConfig();
+
 
     private double overallDesiredModuleState;
 
@@ -55,19 +59,24 @@ public class SwerveModule {
 
         /* Angle Motor Config */
         mAngleMotor = new SparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
-        mAngleMotor.setInverted(Constants.SwerveConstants.angleMotorInvert);
-        mAngleMotor.setSmartCurrentLimit(Constants.SwerveConstants.angleCurrentThreshold);
-        mAngleMotor.setIdleMode(SwerveConstants.angleNeutralMode);
+        angleConfig
+            .inverted(Constants.SwerveConstants.angleMotorInvert)
+            .idleMode(Constants.SwerveConstants.angleNeutralMode)
+            .smartCurrentLimit(Constants.SwerveConstants.angleCurrentLimit);
 
+        angleConfig.encoder
+            .countsPerRevolution(42);
+        
         /* Angle Motor PID Config */
-        mAngleController = mAngleMotor.getPIDController();
-        mAngleController.setP(Constants.SwerveConstants.angleKP);
-        mAngleController.setI(Constants.SwerveConstants.angleKI);
-        mAngleController.setD(Constants.SwerveConstants.angleKD);
+        mAngleController = mAngleMotor.getClosedLoopController();
 
-        mAngleController.setPositionPIDWrappingEnabled(true); //wraps the numbers around when it's too big. ex if the limits are 0 and 100, it will "wrap" back to 0 after it exceeds 100, vise versa
-        mAngleController.setPositionPIDWrappingMinInput(0);
-        mAngleController.setPositionPIDWrappingMaxInput(RevConfigs.CANCoderAngleToNeoEncoder(1));
+        angleConfig.closedLoop
+            .p(SwerveConstants.angleKP)
+            .i(SwerveConstants.angleKI)
+            .d(SwerveConstants.angleKD)
+            .positionWrappingEnabled(true) //wraps the numbers around when it's too big. ex if the limits are 0 and 100, it will "wrap" back to 0 after it exceeds 100, vise versa
+            .positionWrappingMinInput(0)
+            .positionWrappingMaxInput(RevConfigs.CANCoderAngleToNeoEncoder(1));
 
         /* Angle Motor Encoder Config */
         mNeoAngleEncoder = mAngleMotor.getEncoder(Type.kHallSensor, 42);
@@ -111,7 +120,7 @@ public class SwerveModule {
     }
 
     public Rotation2d getCANcoder(){
-        return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue());
+        return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
     }
 
     //** Points the module forward */

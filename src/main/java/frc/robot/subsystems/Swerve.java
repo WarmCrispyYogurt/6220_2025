@@ -20,12 +20,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
+import com.studica.frc.AHRS.NavXUpdateRate;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -37,6 +39,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.MassUnit;
+import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.MomentOfInertia;
+import edu.wpi.first.units.measure.MutMass;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
@@ -117,7 +123,7 @@ public class Swerve extends SubsystemBase {
      * initializes the swerve drive and sets up the variables and constants
      */
     public Swerve() {
-        gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
+        gyro = new AHRS(NavXComType.kMXP_SPI, NavXUpdateRate.k200Hz);
 
 
         mSwerveMods = new SwerveModule[] {
@@ -142,6 +148,14 @@ public class Swerve extends SubsystemBase {
         PathPlannerLogging.setLogActivePathCallback((poses) -> field2d.getObject("path").setPoses(poses));
         // Shuffleboard.getTab("Field Pose 2d tab (map)").add("Field 2d", field2d);
         // SmartDashboard.putData("Field", field2d);
+
+         RobotConfig config;
+        try{
+        config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+        // Handle exception as needed
+        e.printStackTrace();
+        }
         createShuffleOutputs();
     }
 
@@ -192,31 +206,55 @@ public class Swerve extends SubsystemBase {
      * swerve auto init
      */
     public void configureAutoBuilder() {
-        AutoBuilder.configureHolonomic(
-        this::getPose, // Robot pose supplier
-        this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
-        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-        new PIDConstants(autoRkP.get(), autoRkI.get(), autoRkD.get()), // Translation PID constants
-        new PIDConstants(autoTkP.get(), autoTkI.get(), autoTkD.get()), // Rotation PID constants
-                4.5, // Max module speed, in m/s
-                0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                new ReplanningConfig() // Default path replanning config. See the API for the options here
-        ),
-        () -> {
-            // Boolean supplier that controls when the path will be mirrored for the red alliance
-            // This will flip the path being followed to the red side of the field.
-            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+        // AutoBuilder.configureHolonomic(
+        // this::getPose, // Robot pose supplier
+        // this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+        // this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        // this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        // new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+        // new PIDConstants(autoRkP.get(), autoRkI.get(), autoRkD.get()), // Translation PID constants
+        // new PIDConstants(autoTkP.get(), autoTkI.get(), autoTkD.get()), // Rotation PID constants
+        //         4.5, // Max module speed, in m/s
+        //         0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+        //         new ReplanningConfig() // Default path replanning config. See the API for the options here
+        // ),
+        // () -> {
+        //     // Boolean supplier that controls when the path will be mirrored for the red alliance
+        //     // This will flip the path being followed to the red side of the field.
+        //     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-            var alliance = DriverStation.getAlliance();
-            if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-            }
-            return false;
-        },
-        this // Reference to this subsystem to set requirements
-        );
+        //     var alliance = DriverStation.getAlliance();
+        //     if (alliance.isPresent()) {
+        //     return alliance.get() == DriverStation.Alliance.Red;
+        //     }
+        //     return false;
+        // },
+        // this // Reference to this subsystem to set requirements
+        // );
+
+    //     AutoBuilder.configure(
+    //         this::getPose, // Robot pose supplier
+    //         this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+    //         this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+    //         (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+    //         new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+    //                 new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+    //                 new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+    //         ),
+    //         // new RobotConfig(new m, null, null, null) , // The robot configuration
+    //         () -> {
+    //           // Boolean supplier that controls when the path will be mirrored for the red alliance
+    //           // This will flip the path being followed to the red side of the field.
+    //           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+    //           var alliance = DriverStation.getAlliance();
+    //           if (alliance.isPresent()) {
+    //             return alliance.get() == DriverStation.Alliance.Red;
+    //           }
+    //           return false;
+    //         },
+    //         this // Reference to this subsystem to set requirements
+    // );
     }
     
 
@@ -492,7 +530,7 @@ public class Swerve extends SubsystemBase {
 
         
         // LimelightCalculations.updatePoseEstimation(poseEstimator, this);
-        Localization_V2.updateCamerasPoseEstimation(this, poseEstimator, visionMeasurementStdDevConstant.get());
+        // Localization_V2.updateCamerasPoseEstimation(this, poseEstimator, visionMeasurementStdDevConstant.get());
         poseEstimator.update(getGyroYaw(), getModulePositions());
         
         field2d.setRobotPose(getPose());

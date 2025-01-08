@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -16,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
+  public static final CTREConfigs ctreConfigs = new CTREConfigs();
+
   private final RobotContainer m_robotContainer;
 
   /**
@@ -26,6 +33,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
   }
 
   /**
@@ -54,6 +64,20 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+
+    Optional<Alliance> ally = DriverStation.getAlliance();
+    if (ally.isPresent()) {
+        if (ally.get() == Alliance.Red) {
+            Constants.isRed = "red";
+        }
+        if (ally.get() == Alliance.Blue) {
+            Constants.isRed = "blue";
+        }
+    }
+    else {
+        Constants.isRed = "N/A";
+    }
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -64,7 +88,25 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    if(Constants.isRed.equals("N/A"))
+    {
+      Optional<Alliance> ally = DriverStation.getAlliance();
+      if (ally.isPresent())
+      {
+          if (ally.get() == Alliance.Red) {
+              Constants.isRed = "red";
+          }
+          if (ally.get() == Alliance.Blue) {
+              Constants.isRed = "blue";
+          }
+      }
+      else
+      {
+          Constants.isRed = "N/A";
+      }
+    }
+  }
 
   @Override
   public void teleopInit() {
@@ -72,6 +114,19 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    Optional<Alliance> ally = DriverStation.getAlliance();
+    if (ally.isPresent()) {
+        if (ally.get() == Alliance.Red) {
+            Constants.isRed = "red";
+        }
+        if (ally.get() == Alliance.Blue) {
+            Constants.isRed = "blue";
+        }
+    }
+    else {
+        Constants.isRed = "N/A";
+    }
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -79,7 +134,25 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if(Constants.isRed.equals("N/A"))
+    {
+      Optional<Alliance> ally = DriverStation.getAlliance();
+      if (ally.isPresent())
+      {
+          if (ally.get() == Alliance.Red) {
+              Constants.isRed = "red";
+          }
+          if (ally.get() == Alliance.Blue) {
+              Constants.isRed = "blue";
+          }
+      }
+      else
+      {
+          Constants.isRed = "N/A";
+      }
+    }
+  }
 
   @Override
   public void testInit() {
