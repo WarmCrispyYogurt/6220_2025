@@ -14,15 +14,24 @@ import com.revrobotics.spark.SparkClosedLoopController;
 // import com.revrobotics.SparkRelativeEncoder.Type;
 import com.revrobotics.spark.SparkRelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.Constants.SwerveConstants;
+
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+
+// import com.revrobotics.SparkRelativeEncoder.Type;
+
+import com.revrobotics.RelativeEncoder;
 
 public class SwerveModule {
     public int moduleNumber;
@@ -71,16 +80,15 @@ public class SwerveModule {
         mAngleController = mAngleMotor.getClosedLoopController();
 
         angleConfig.closedLoop
-            .p(SwerveConstants.angleKP)
-            .i(SwerveConstants.angleKI)
-            .d(SwerveConstants.angleKD)
+            .pid(SwerveConstants.angleKP, SwerveConstants.angleKI, SwerveConstants.angleKD)
             .positionWrappingEnabled(true) //wraps the numbers around when it's too big. ex if the limits are 0 and 100, it will "wrap" back to 0 after it exceeds 100, vise versa
             .positionWrappingMinInput(0)
             .positionWrappingMaxInput(RevConfigs.CANCoderAngleToNeoEncoder(1));
 
         /* Angle Motor Encoder Config */
-        mNeoAngleEncoder = mAngleMotor.getEncoder(Type.kHallSensor, 42);
-        mAngleMotor.burnFlash();
+        mNeoAngleEncoder = mAngleMotor.getEncoder();
+
+        mAngleMotor.configure(angleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         resetToAbsolute();
 
         /* Drive Motor Config */
@@ -91,7 +99,8 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
-        desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
+        // desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
+        desiredState.optimize(getState().angle);
         mAngleController.setReference(RevConfigs.CANCoderAngleToNeoEncoder(desiredState.angle.getRotations()), ControlType.kPosition);
         overallDesiredModuleState = desiredState.angle.getDegrees();
         SmartDashboard.putNumber("Desired position", (desiredState.angle.getDegrees()));
@@ -133,14 +142,14 @@ public class SwerveModule {
 
     public SwerveModuleState getState(){
         return new SwerveModuleState(
-            Conversions.RPSToMPS(mDriveMotor.getVelocity().getValue(), Constants.SwerveConstants.wheelCircumference), 
+            Conversions.RPSToMPS(mDriveMotor.getVelocity().getValueAsDouble(), Constants.SwerveConstants.wheelCircumference), 
             Rotation2d.fromRotations(RevConfigs.NeoEncoderAngleToCANCoder(mNeoAngleEncoder.getPosition()))
         );
     }
 
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
-            Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.SwerveConstants.wheelCircumference), 
+            Conversions.rotationsToMeters(mDriveMotor.getPosition().getValueAsDouble(), Constants.SwerveConstants.wheelCircumference), 
             Rotation2d.fromRotations(RevConfigs.NeoEncoderAngleToCANCoder(mNeoAngleEncoder.getPosition()))
         );
     }
