@@ -11,8 +11,8 @@ public final class CTREConfigs {
     public TalonFXConfiguration swerveDriveFXConfig = new TalonFXConfiguration();
     public CANcoderConfiguration swerveCANcoderConfig = new CANcoderConfiguration();
 
-    public TalonFXConfiguration shooterAConfig = new TalonFXConfiguration();
-    public TalonFXConfiguration shooterBConfig = new TalonFXConfiguration();
+    public TalonFXConfiguration wristAConfig = new TalonFXConfiguration();
+    public TalonFXConfiguration wristBConfig = new TalonFXConfiguration();
 
     public CTREConfigs(){
         /** Swerve CANCoder Configuration */
@@ -47,10 +47,16 @@ public final class CTREConfigs {
         swerveDriveFXConfig.Feedback.SensorToMechanismRatio = Constants.SwerveConstants.driveGearRatio;
 
         /* Current Limiting */
+        // swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.SwerveConstants.driveEnableCurrentLimit;
+        // swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimit = Constants.SwerveConstants.driveCurrentLimit;
+        // swerveDriveFXConfig.CurrentLimits.SupplyCurrentThreshold = Constants.SwerveConstants.driveCurrentThreshold;
+        // swerveDriveFXConfig.CurrentLimits.SupplyTimeThreshold = Constants.SwerveConstants.driveCurrentThresholdTime;
+
         swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.SwerveConstants.driveEnableCurrentLimit;
-        swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimit = Constants.SwerveConstants.driveCurrentLimit;
-        swerveDriveFXConfig.CurrentLimits.SupplyCurrentThreshold = Constants.SwerveConstants.driveCurrentThreshold;
-        swerveDriveFXConfig.CurrentLimits.SupplyTimeThreshold = Constants.SwerveConstants.driveCurrentThresholdTime;
+        swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimit = Constants.SwerveConstants.driveMaxCurrent;
+        swerveDriveFXConfig.CurrentLimits.SupplyCurrentLowerLimit = Constants.SwerveConstants.driveCurrentLimit;
+        swerveDriveFXConfig.CurrentLimits.SupplyCurrentLowerTime = Constants.SwerveConstants.driveMaxCurrentTime;
+
 
         /* PID Config */
         swerveDriveFXConfig.Slot0.kP = Constants.SwerveConstants.driveKP;
@@ -66,54 +72,54 @@ public final class CTREConfigs {
 
         /** Shooter Motor A, Green, Configuration */
          /* Motor Inverts and Neutral Mode */
-        shooterAConfig.MotorOutput.Inverted = ShooterConstants.motorAInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-        shooterAConfig.MotorOutput.NeutralMode = ShooterConstants.MOTOR_A_NEUTRAL_MODE_VALUE;
+        wristAConfig.MotorOutput.Inverted = ShooterConstants.motorAInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+        wristAConfig.MotorOutput.NeutralMode = ShooterConstants.MOTOR_A_NEUTRAL_MODE_VALUE;
 
         /* Gear Ratio Config */
-        // shooterAConfig.Feedback.SensorToMechanismRatio = ;
+        // wristAConfig.Feedback.SensorToMechanismRatio = ;
 
         /* Current Limiting */
-        shooterAConfig.CurrentLimits.SupplyCurrentLimitEnable = ShooterConstants.shooterAEnableCurrentLimit;
-        shooterAConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.shooterACurrentLimit;
-        shooterAConfig.CurrentLimits.SupplyCurrentThreshold = ShooterConstants.shooterACurrentThreshold;
-        shooterAConfig.CurrentLimits.SupplyTimeThreshold = ShooterConstants.shooterACurrentThresholdTime;
+        wristAConfig.CurrentLimits.SupplyCurrentLimitEnable = ShooterConstants.shooterAEnableCurrentLimit;
+        wristAConfig.CurrentLimits.SupplyCurrentLowerLimit = ShooterConstants.shooterACurrentLimit;
+        wristAConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.shooterACurrentThreshold;
+        wristAConfig.CurrentLimits.SupplyCurrentLowerTime = ShooterConstants.shooterACurrentThresholdTime;
 
         /* PID Config */
-        // shooterAConfig.Slot0.kP = ;
-        // shooterAConfig.Slot0.kI = ;
-        // shooterAConfig.Slot0.kD = ;
+        // wristAConfig.Slot0.kP = ;
+        // wristAConfig.Slot0.kI = ;
+        // wristAConfig.Slot0.kD = ;
 
         /* Open and Closed Loop Ramping */
-        // shooterAConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = ;
-        // shooterAConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = ;
+        // wristAConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = ;
+        // wristAConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = ;
 
-        // shooterAConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = ;
-        // shooterAConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = ;
+        // wristAConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = ;
+        // wristAConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = ;
 
         /** Shooter Motor B, Red/orange Configuration */
          /* Motor Inverts and Neutral Mode */
-        shooterBConfig.MotorOutput.Inverted = Constants.ShooterConstants.motorBInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-        shooterBConfig.MotorOutput.NeutralMode = Constants.ShooterConstants.MOTOR_B_NEUTRAL_MODE_VALUE;
+        wristBConfig.MotorOutput.Inverted = Constants.ShooterConstants.motorBInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+        wristBConfig.MotorOutput.NeutralMode = Constants.ShooterConstants.MOTOR_B_NEUTRAL_MODE_VALUE;
 
         /* Gear Ratio Config */
-        // shooterBConfig.Feedback.SensorToMechanismRatio = ;
+        // wristBConfig.Feedback.SensorToMechanismRatio = ;
 
         /* Current Limiting */
-        shooterBConfig.CurrentLimits.SupplyCurrentLimitEnable = ShooterConstants.shooterBEnableCurrentLimit;
-        shooterBConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.shooterBCurrentLimit;
-        shooterBConfig.CurrentLimits.SupplyCurrentThreshold = ShooterConstants.shooterBCurrentThreshold;
-        shooterBConfig.CurrentLimits.SupplyTimeThreshold = ShooterConstants.shooterBCurrentThresholdTime;
+        wristBConfig.CurrentLimits.SupplyCurrentLimitEnable = ShooterConstants.shooterBEnableCurrentLimit;
+        wristBConfig.CurrentLimits.SupplyCurrentLowerLimit = ShooterConstants.shooterBCurrentLimit;
+        wristBConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.shooterBCurrentThreshold;
+        wristBConfig.CurrentLimits.SupplyCurrentLowerTime = ShooterConstants.shooterBCurrentThresholdTime;
 
         /* PID Config */
-        // shooterBConfig.Slot0.kP = ;
-        // shooterBConfig.Slot0.kI = ;
-        // shooterBConfig.Slot0.kD = ;
+        // wristBConfig.Slot0.kP = ;
+        // wristBConfig.Slot0.kI = ;
+        // wristBConfig.Slot0.kD = ;
 
         /* Open and Closed Loop Ramping */
-        // shooterBConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = ;
-        // shooterBConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = ;
+        // wristBConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = ;
+        // wristBConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = ;
 
-        // shooterBConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = ;
-        // shooterBConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = ;
+        // wristBConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = ;
+        // wristBConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = ;
     }
 }
