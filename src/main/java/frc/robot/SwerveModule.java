@@ -12,14 +12,14 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 // import com.revrobotics.SparkRelativeEncoder.Type;
-import com.revrobotics.spark.SparkRelativeEncoder;
+// import com.revrobotics.spark.SparkRelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.Kinematics;
+// import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.lib.math.Conversions;
@@ -27,11 +27,11 @@ import frc.lib.util.SwerveModuleConstants;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.Constants.SwerveConstants;
 
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+// import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 // import com.revrobotics.SparkRelativeEncoder.Type;
 
-import com.revrobotics.RelativeEncoder;
+// import com.revrobotics.RelativeEncoder;
 
 public class SwerveModule {
     public int moduleNumber;
