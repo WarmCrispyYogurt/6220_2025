@@ -3,6 +3,7 @@
  */
 package frc.robot.commands;
 
+import frc.robot.Constants.OIConstants;
 // import frc.robot.Constants.SwerveConstants;
 // import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -39,11 +40,11 @@ public class TeleopSwerve extends Command {
     @Override
     public void execute() {
         /* Get Values, Deadband*/
-        
+        double[] driverInputs = OIConstants.getDriverInputs(driver.getHID());
         /* Drive */
         s_Swerve.drive(
-            new Translation2d(driver.getLeftX(),driver.getLeftY()),
-            driver.getRightX(), 
+            new Translation2d(driverInputs[0],driverInputs[1]),
+            driverInputs[2], 
             !robotCentricSup.getAsBoolean(), 
             true
         );

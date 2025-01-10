@@ -4,12 +4,9 @@
 
 package frc.robot;
 
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
+//import frc.robot.commands.Autos;
 import frc.robot.commands.TeleopSwerve;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.examplesparkmax;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -26,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final examplesparkmax m_sparkmax = new examplesparkmax();
+  
 
   private final Swerve s_Swerve = new Swerve();
   
@@ -61,12 +58,11 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
+    m_driverController.y().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.a().onTrue(new InstantCommand(()->m_sparkmax.spin(0.5)));
-    m_driverController.a().onFalse(new InstantCommand(()->m_sparkmax.spin(0)));
+    
   }
 
   /**
