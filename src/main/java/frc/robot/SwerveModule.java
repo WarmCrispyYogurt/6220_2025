@@ -73,8 +73,8 @@ public class SwerveModule {
             .idleMode(Constants.SwerveConstants.angleNeutralMode)
             .smartCurrentLimit(Constants.SwerveConstants.angleCurrentLimit);
 
-        angleConfig.encoder
-            .countsPerRevolution(42);
+        // angleConfig.encoder
+        //     .countsPerRevolution(42);
         
         /* Angle Motor PID Config */
         mAngleController = mAngleMotor.getClosedLoopController();
@@ -95,6 +95,7 @@ public class SwerveModule {
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig); //motor inverted, current limits, etc. editable in constants.java. CTREConfigs.java is just a holder to organize the values
         mDriveMotor.getConfigurator().setPosition(0.0);
+        
         // mDriveMotor.setNeutralMode(SwerveConstants.driveNeutralMode);
     }
 
@@ -112,9 +113,11 @@ public class SwerveModule {
     }
 
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
+        SmartDashboard.putBoolean("mod" + moduleNumber + "isopenloop", isOpenLoop);
         if(isOpenLoop){
             driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
             mDriveMotor.setControl(driveDutyCycle);
+            SmartDashboard.putNumber("Mod " + moduleNumber + "drivedutycycle", driveDutyCycle.Output);
         }
         else {
             driveVelocity.Velocity = Conversions.MPSToRPS(desiredState.speedMetersPerSecond, Constants.SwerveConstants.wheelCircumference);

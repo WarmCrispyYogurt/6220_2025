@@ -188,8 +188,8 @@ public class Swerve extends SubsystemBase {
 
         //set all the modules
         for(SwerveModule mod : mSwerveMods){
+            SmartDashboard.putString("Mod " + mod.moduleNumber +" Swerve Module State", swerveModuleStates[mod.moduleNumber].toString());
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
-            //SmartDashboard.putString("Mod " + mod.moduleNumber +" Swerve Module State", swerveModuleStates[mod.moduleNumber].toString());
         }
             }
 
