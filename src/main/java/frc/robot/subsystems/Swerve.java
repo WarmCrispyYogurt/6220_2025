@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.lib.util.RumbleManager;
 import frc.lib.util.TunableNumber;
 import frc.robot.Constants;
 // import frc.robot.LimelightCalculations;
@@ -48,6 +49,7 @@ import edu.wpi.first.units.measure.MutMass;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 //import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -157,7 +159,7 @@ public class Swerve extends SubsystemBase {
         try{
         config = RobotConfig.fromGUISettings();
         } catch (Exception e) {
-            config = new Robot //see https://pathplanner.dev/robot-config.html#bumper-config-options for more details on what you need to set robotconfig up manuelly
+            config = new RobotConfig(Constants.robotMass, Constants.robotMOI, SwerveConstants.swerveModuleConfig, SwerveConstants.swerveKinematics.getModules()); //see https://pathplanner.dev/robot-config.html#bumper-config-options for more details on what you need to set robotconfig up manuelly
         //Also https://pathplanner.dev/api/java/com/pathplanner/lib/config/RobotConfig.html for API
         e.printStackTrace();
         }
@@ -368,9 +370,10 @@ public class Swerve extends SubsystemBase {
         poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), heading));
     }
 
-    public void zeroHeading(){
+    public void zeroHeading(XboxController driverController){
         double offset = Constants.isRed.equals("red") ? 0 : Math.PI;
         poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d(offset)));
+        RumbleManager.rumble(driverController, .2);
     }
 
     public Rotation2d getGyroYaw() {

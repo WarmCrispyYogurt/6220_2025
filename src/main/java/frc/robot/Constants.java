@@ -56,8 +56,8 @@ public final class Constants {
 
     public static String isRed = "N/A";
 
-    Mass robotMass = Pound.of(100);
-    MomentOfInertia robotMOI = KilogramSquareMeters.of(4.563);
+    public static final Mass robotMass = Pound.of(100);
+    public static final MomentOfInertia robotMOI = KilogramSquareMeters.of(4.563);
 
     public static final class OIConstants {
         public static final int kDriverControllerPort = 0;
@@ -454,8 +454,8 @@ public final class Constants {
         /* Swerve module configs -- for pathplanner autobuilder (auto)
          * API: https://pathplanner.dev/api/java/com/pathplanner/lib/config/ModuleConfig.html
          */
-        DCMotor krackonX60 = new DCMotor(12, swerveAlignUpdateSecond, rotation_kP, rotation_kI, rotation_kD, pigeonID);//https://docs.wcproducts.com/kraken-x60/kraken-x60-motor/overview-and-features/motor-performance
-        ModuleConfig swerveModuleConfig = new ModuleConfig(wheelRadius,SwerveConstants.maxSpeed,1.0,krackonX60, Robot.ctreConfigs.swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimit,4);
+        public static final DCMotor krackonX60 = new DCMotor(12, 7.09, 366, 2, 628.32, 4);//https://docs.wcproducts.com/kraken-x60/kraken-x60-motor/overview-and-features/motor-performance
+        public static final ModuleConfig swerveModuleConfig = new ModuleConfig(wheelRadius,SwerveConstants.maxSpeed,1.0,krackonX60, Robot.ctreConfigs.swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimit,4);
         /* Module Gear Ratios */
         public static final double driveGearRatio = chosenModule.driveGearRatio;
         public static final double angleGearRatio = chosenModule.angleGearRatio;
