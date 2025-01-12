@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.studica.frc.AHRS.NavXUpdateRate;
+import com.fasterxml.jackson.databind.deser.std.MapDeserializer;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -151,10 +152,13 @@ public class Swerve extends SubsystemBase {
         PathPlannerLogging.setLogActivePathCallback((poses) -> field2d.getObject("path").setPoses(poses));
         // Shuffleboard.getTab("Field Pose 2d tab (map)").add("Field 2d", field2d);
         // SmartDashboard.putData("Field", field2d);
+        // ModuleConfig swerveModuleConfig = new ModuleConfig(wheelRadius,SwerveConstants.maxSpeed,1.0,krackonX60, /);
+        
         try{
         config = RobotConfig.fromGUISettings();
         } catch (Exception e) {
-        // Handle exception as needed
+            config = new Robot //see https://pathplanner.dev/robot-config.html#bumper-config-options for more details on what you need to set robotconfig up manuelly
+        //Also https://pathplanner.dev/api/java/com/pathplanner/lib/config/RobotConfig.html for API
         e.printStackTrace();
         }
         createShuffleOutputs();
