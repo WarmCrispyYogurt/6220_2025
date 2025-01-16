@@ -17,7 +17,8 @@ public class LEDCANdle extends SubsystemBase {
   public enum CurrentState {
       OFF,
       ON,
-      RAINBOW
+      RAINBOW,
+      BLINKING
   }
 // Initialize the LEDCANdle's configuration
   public LEDCANdle() {
